@@ -314,7 +314,7 @@ def sky_ribbons(img, rng, p, gy):
     rib = Image.new("RGB", (W, W), (0, 0, 0)); rd = ImageDraw.Draw(rib)
     for k in range(3):
         base = rng.uniform(90, 260); ph = rng.uniform(0, 6.28); amp = rng.uniform(20, 45)
-        col = [(40, 160, 110), (70, 60, 150), (40, 120, 150)][k]
+        col = [(30, 170, 140), (90, 50, 160), (40, 130, 160)][k]
         pts = [(x, base + math.sin(x / W * 5 + ph) * amp + math.sin(x / W * 13 + ph) * 8) for x in range(-20, W + 40, 16)]
         rd.line(pts, fill=col, width=int(rng.uniform(18, 34)), joint="curve")
     rib = rib.filter(ImageFilter.GaussianBlur(18)).resize(img.size, Image.BILINEAR)
@@ -385,15 +385,32 @@ def sapling_leaves(d, p, tips, accent=False):
             leaf_shape(d, tx, ty, ang, r.uniform(28, 36) * S, r.uniform(13, 17) * S, c, _lift(c, -50))
 
 # ---------------------------------------------------------------- render
+# Fixed rarity identities (match the homepage rarity cards). One palette per
+# rarity; pick_palette only nudges shade per token, never the hue family.
+RARITY_PAL = {
+    "Common":    dict(bg1=(10,11,30), bg2=(34,28,66), soil=(34,28,30), ground=(20,18,26), bark=(96,70,50), root=(150,108,70),
+                      leaf=[(96,180,80),(140,210,96),(70,150,70)], accent=(226,236,140), glow=(255,214,150)),
+    "Uncommon":  dict(bg1=(26,9,8), bg2=(84,32,20), soil=(50,24,18), ground=(32,15,12), bark=(84,44,30), root=(160,84,46),
+                      leaf=[(245,140,50),(255,180,70),(220,100,40)], accent=(255,214,110), glow=(255,180,80)),
+    "Rare":      dict(bg1=(16,9,32), bg2=(58,32,92), soil=(36,26,48), ground=(24,17,34), bark=(82,62,100), root=(146,116,180),
+                      leaf=[(170,130,235),(205,175,252),(135,100,210)], accent=(248,205,250), glow=(225,195,255), fly=(250,230,255)),
+    "Legendary": dict(bg1=(4,14,18), bg2=(10,40,46), soil=(18,30,32), ground=(11,19,21), bark=(60,150,146), root=(90,170,165),
+                      leaf=[(70,220,200),(120,240,225),(50,180,190)], accent=(190,120,250), glow=(140,255,230),
+                      lum=(90,255,220), aura=(60,190,180), fly=(200,255,240), ribbons=True),
+}
+_KEYS_SHADE = ("bg1", "bg2", "leaf", "accent", "bark")
+
 def pick_palette(token_id, rarity):
+    if rarity == "Mythic":
+        return "worldtree", WORLD
+    base = RARITY_PAL[rarity]
     r = random.Random(token_id * 2654435761 + 17)
-    if rarity in ("Common", "Uncommon"):
-        name = r.choice(sorted(BASE)); return name, BASE[name]
-    if rarity == "Rare":
-        name = r.choice(sorted(RARE)); return name, RARE[name]
-    if rarity == "Legendary":
-        name = r.choice(sorted(LEGENDARY)); return name, LEGENDARY[name]
-    return "worldtree", WORLD
+    k = r.uniform(-12, 12)          # small per-token brightness shift, same hue family
+    p = dict(base)
+    p["leaf"] = [_lift(c, k + r.uniform(-6, 6)) for c in base["leaf"]]
+    p["bg2"] = _lift(base["bg2"], r.uniform(-6, 6))
+    p["accent"] = _lift(base["accent"], r.uniform(-8, 8))
+    return rarity.lower(), p
 
 def default_invites(stage):
     return min(max(stage - 1, 0), 2)
