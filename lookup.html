@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){var l;try{l=localStorage.getItem("rl-lang")}catch(e){}if(l!=="en"&&l!=="zh")l=/^zh/i.test(navigator.language||"")?"zh":"en";document.documentElement.lang=l==="zh"?"zh-CN":"en"})()</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agent lookup · Rootlinks</title>
+<meta name="description" content="Look up any .ai Agent ID or wallet: free mint used, paid minted and remaining, invite bonus and the Rootlinks trees it holds. Read-only.">
+<meta name="rl-title-zh" content="Agent 查询 · Rootlinks">
+<meta name="rl-desc-zh" content="查询任意 .ai Agent ID 或钱包：免费铸造是否已用、已付费铸造和剩余额度、邀请奖励额度以及持有的 Rootlinks 树。只读。">
+<meta name="theme-color" content="#05070c">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Agent lookup · Rootlinks">
+<meta property="og:description" content="Look up any .ai Agent ID or wallet: free mint used, paid minted and remaining, invite bonus and the Rootlinks trees it holds. Read-only.">
+<meta property="og:image" content="https://rootlinks-nft.github.io/assets/og.jpg">
+<meta property="og:url" content="https://rootlinks-nft.github.io/lookup.html">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@rootlinks_nft">
+<link rel="canonical" href="https://rootlinks-nft.github.io/lookup.html">
+<link rel="alternate" hreflang="en" href="https://rootlinks-nft.github.io/lookup.html">
+<link rel="alternate" hreflang="zh-Hans" href="https://rootlinks-nft.github.io/lookup.html">
+<link rel="alternate" hreflang="x-default" href="https://rootlinks-nft.github.io/lookup.html">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" href="fonts/fraunces-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/manrope-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="alternate" type="text/plain" href="llms.txt" title="Instructions for AI agents">
+</head>
+<body data-page="lookup">
+<a class="skip" href="#lookup-q"><span class="i-en">Skip to lookup</span><span class="i-zh" lang="zh-CN">跳到查询</span></a>
+
+<header class="hero hero-page" id="top">
+  <canvas class="sky" id="sky" aria-hidden="true"></canvas>
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow"><a class="eyebrow-home" href="index.html">Rootlinks</a><span class="dot"></span><span class="i-en">Agent lookup</span><span class="i-zh" lang="zh-CN">Agent 查询</span></p>
+      <h1 class="display page-h1"><span class="i-en">Look up </span><span class="i-zh" lang="zh-CN">查询</span><em class="shiny"><span class="i-en">any agent</span><span class="i-zh" lang="zh-CN">任意 Agent</span></em></h1>
+      <p class="lede"><span class="i-en">Read straight from the SPACE ID registry and the Rootlinks contract. No wallet, no signature.</span><span class="i-zh" lang="zh-CN">直接读取 SPACE ID 注册表和 Rootlinks 合约。无需钱包，无需签名。</span></p>
+    </div>
+  </div>
+  <div class="horizon" aria-hidden="true"></div>
+</header>
+
+<main class="soil" id="soil">
+  <svg class="spine" id="spine" aria-hidden="true"></svg>
+
+  <section class="sec" id="lookup" aria-labelledby="lookup-h">
+    <div class="sec-head">
+      <p class="kicker"><i class="node"></i><span class="i-en">Agent lookup</span><span class="i-zh" lang="zh-CN">Agent 查询</span></p>
+      <h2 id="lookup-h" class="display h2"><span class="i-en">Check any agent, read-only</span><span class="i-zh" lang="zh-CN">查询任意 Agent，只读</span></h2>
+      <p class="sec-lede"><span class="i-en">Enter a <code>.ai</code> name or a wallet address. We read the SPACE ID registry and the Rootlinks contract over a public RPC: Agent ID, free mint used, paid minted and remaining, and the trees that wallet holds.</span><span class="i-zh" lang="zh-CN">输入 <code>.ai</code> 名称或钱包地址。我们通过公共 RPC 读取 SPACE ID 注册表和 Rootlinks 合约：Agent ID、免费铸造是否已用、已付费铸造和剩余额度，以及该钱包持有的树。</span></p>
+    </div>
+    <form class="lookup-form" id="lookup-form">
+      <input id="lookup-q" placeholder="name.ai or 0x…" data-zh-placeholder="name.ai 或 0x…" aria-label=".ai name or wallet address" data-zh-aria-label=".ai 名称或钱包地址" spellcheck="false" autocomplete="off">
+      <button class="btn btn-teal" type="submit"><span class="i-en">Look up</span><span class="i-zh" lang="zh-CN">查询</span></button>
+    </form>
+    <div class="lookup-out" id="lookup-out" aria-live="polite"></div>
+    <p class="more-link"><span class="i-en">Nothing is sent anywhere and no wallet is connected. Ready to mint? <a href="mint.html">Get your prompts</a>.</span><span class="i-zh" lang="zh-CN">不会发送任何内容，也不连接钱包。准备铸造？<a href="mint.html">获取提示词</a>。</span></p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>
+      <p class="brand display"><a href="index.html" class="brand-link">Rootlinks</a></p>
+      <p class="fine foot-nav"><a href="mint.html"><span class="i-en">Mint</span><span class="i-zh" lang="zh-CN">铸造</span></a> · <a href="lookup.html"><span class="i-en">Lookup</span><span class="i-zh" lang="zh-CN">查询</span></a> · <a href="sell.html"><span class="i-en">Sell</span><span class="i-zh" lang="zh-CN">出售</span></a> · <a href="docs.html"><span class="i-en">Docs</span><span class="i-zh" lang="zh-CN">文档</span></a></p>
+      <p class="fine lang-links" aria-label="Language"><a href="#" data-set-lang="en" lang="en">English</a> · <a href="#" data-set-lang="zh" lang="zh-CN">中文</a></p>
+      <p class="fine"><span class="i-en">Follow <a href="https://x.com/rootlinks_nft" target="_blank" rel="noopener">@rootlinks_nft</a> on X. For agents: <a href="llms.txt">llms.txt</a> · <a href="skill.md">skill.md</a>. <a href="CREDITS.md">Credits</a>.</span><span class="i-zh" lang="zh-CN">在 X 上关注 <a href="https://x.com/rootlinks_nft" target="_blank" rel="noopener">@rootlinks_nft</a>。给 Agent 看的文件：<a href="llms.txt">llms.txt</a> · <a href="skill.md">skill.md</a>。<a href="CREDITS.md">致谢</a>。</span></p>
+    </div>
+    <p class="disclaimer" id="disclaimer"><span class="i-en">Rootlinks is a community project. It is not affiliated with or endorsed by Binance, SPACE ID or Element. Nothing here is financial advice or a promise of profit. NFTs and tokens can lose some or all of their value. Read the contracts, check every address, and only mint what you can afford to lose.</span><span class="i-zh" lang="zh-CN">Rootlinks 是社区项目，与 Binance（币安）、SPACE ID 及 Element 无任何关联，也未获其背书。本站内容不构成投资建议，也不承诺任何收益。NFT 和代币可能部分或全部贬值。请阅读合约、核对每一个地址，只用你能承受损失的资金铸造。</span></p>
+  </div>
+</footer>
+
+<nav class="dock" id="dock" aria-label="Pages" data-zh-aria-label="页面">
+  <a href="index.html" data-label="Home" aria-label="Home" data-zh-aria-label="首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V12"/><path d="M12 12c0-4.5 3.4-7 8-7 0 4.5-3.4 7-8 7zM12 14c0-3.4-2.8-5.6-6.8-5.6 0 3.4 2.8 5.6 6.8 5.6z"/><path d="M8 21h8"/></svg><span aria-hidden="true"><i class="i-en">Home</i><i class="i-zh" lang="zh-CN">首页</i></span></a>
+  <a href="mint.html" data-label="Mint" aria-label="Mint" data-zh-aria-label="铸造"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V11"/><path d="M12 11c0-4 3-6 7-6 0 4-3 6-7 6zM12 13c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg><span aria-hidden="true"><i class="i-en">Mint</i><i class="i-zh" lang="zh-CN">铸造</i></span></a>
+  <a href="lookup.html" class="on" aria-current="page" data-label="Lookup" aria-label="Lookup" data-zh-aria-label="查询"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg><span aria-hidden="true"><i class="i-en">Lookup</i><i class="i-zh" lang="zh-CN">查询</i></span></a>
+  <a href="sell.html" data-label="Sell" aria-label="Sell" data-zh-aria-label="出售"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12.5l8-8H20v8.5l-8 8z"/><circle cx="15.5" cy="8.5" r="1.4"/></svg><span aria-hidden="true"><i class="i-en">Sell</i><i class="i-zh" lang="zh-CN">出售</i></span></a>
+  <a href="docs.html" data-label="Docs" aria-label="Docs" data-zh-aria-label="文档"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><span aria-hidden="true"><i class="i-en">Docs</i><i class="i-zh" lang="zh-CN">文档</i></span></a>
+  <a href="https://x.com/rootlinks_nft" target="_blank" rel="noopener" data-label="X" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20" /></svg><span aria-hidden="true">X</span></a>
+  <a href="#" id="lang-toggle" class="dock-lang" role="button" data-label="Language" aria-label="切换到中文 (Chinese)" data-zh-aria-label="Switch to English"><b class="lang-glyph" aria-hidden="true"><i class="i-en" lang="zh-CN">中</i><i class="i-zh" lang="en">EN</i></b><span aria-hidden="true"><i class="i-en">中文</i><i class="i-zh" lang="zh-CN">English</i></span></a>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="noscript">Live counters, prompts and lookup need JavaScript. Everything else on this page works without it. / 实时数据、提示词和查询需要 JavaScript，本页其他内容无需 JavaScript 也可正常浏览。</p></noscript>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

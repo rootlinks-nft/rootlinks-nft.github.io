@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>(function(){var l;try{l=localStorage.getItem("rl-lang")}catch(e){}if(l!=="en"&&l!=="zh")l=/^zh/i.test(navigator.language||"")?"zh":"en";document.documentElement.lang=l==="zh"?"zh-CN":"en"})()</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Docs · Rootlinks</title>
+<meta name="description" content="Rootlinks contracts and verification, every mint, reveal, token and burn rule in detail, the 80% refund guarantee, and machine-readable llms.txt and skill.md for agents.">
+<meta name="rl-title-zh" content="文档 · Rootlinks">
+<meta name="rl-desc-zh" content="Rootlinks 合约与验证、铸造/开图/代币/销毁的全部规则、80% 退款保障，以及给 Agent 的 llms.txt 和 skill.md。">
+<meta name="theme-color" content="#05070c">
+<meta name="color-scheme" content="dark">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Docs · Rootlinks">
+<meta property="og:description" content="Rootlinks contracts and verification, every mint, reveal, token and burn rule in detail, the 80% refund guarantee, and machine-readable llms.txt and skill.md for agents.">
+<meta property="og:image" content="https://rootlinks-nft.github.io/assets/og.jpg">
+<meta property="og:url" content="https://rootlinks-nft.github.io/docs.html">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@rootlinks_nft">
+<link rel="canonical" href="https://rootlinks-nft.github.io/docs.html">
+<link rel="alternate" hreflang="en" href="https://rootlinks-nft.github.io/docs.html">
+<link rel="alternate" hreflang="zh-Hans" href="https://rootlinks-nft.github.io/docs.html">
+<link rel="alternate" hreflang="x-default" href="https://rootlinks-nft.github.io/docs.html">
+<link rel="icon" type="image/png" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" href="fonts/fraunces-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/manrope-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css">
+<link rel="alternate" type="text/plain" href="llms.txt" title="Instructions for AI agents">
+</head>
+<body data-page="docs">
+<a class="skip" href="#contracts"><span class="i-en">Skip to contracts</span><span class="i-zh" lang="zh-CN">跳到合约</span></a>
+
+<header class="hero hero-page" id="top">
+  <canvas class="sky" id="sky" aria-hidden="true"></canvas>
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <p class="eyebrow"><a class="eyebrow-home" href="index.html">Rootlinks</a><span class="dot"></span><span class="i-en">Docs</span><span class="i-zh" lang="zh-CN">文档</span></p>
+      <h1 class="display page-h1"><span class="i-en">Read the </span><span class="i-zh" lang="zh-CN">读懂</span><em class="shiny"><span class="i-en">roots</span><span class="i-zh" lang="zh-CN">根系</span></em></h1>
+      <p class="lede"><span class="i-en">Contracts, verification, every rule in detail and the refund guarantee. The contracts are the final word.</span><span class="i-zh" lang="zh-CN">合约、验证方式、全部规则细节和退款保障。一切以合约为准。</span></p>
+    </div>
+  </div>
+  <div class="horizon" aria-hidden="true"></div>
+</header>
+
+<main class="soil" id="soil">
+  <svg class="spine" id="spine" aria-hidden="true"></svg>
+
+  <section class="sec" id="contracts" aria-labelledby="contracts-h">
+    <div class="sec-head">
+      <p class="kicker"><i class="node"></i><span class="i-en">Contracts</span><span class="i-zh" lang="zh-CN">合约</span></p>
+      <h2 id="contracts-h" class="display h2"><span class="i-en">Verify before you trust</span><span class="i-zh" lang="zh-CN">先验证，再信任</span></h2>
+      <p class="sec-lede"><span class="i-en">Addresses appear here only after deployment and source verification on BscScan and Sourcify. Anything else claiming to be Rootlinks is not. The site reads them from <code>js/config.js</code>, the only place they live.</span><span class="i-zh" lang="zh-CN">合约部署并在 BscScan 和 Sourcify 完成源码验证后，地址才会出现在这里。其他任何自称 Rootlinks 的地址都是假的。本站从 <code>js/config.js</code> 读取地址，这是地址唯一存放的地方。</span></p>
+    </div>
+    <div class="contracts" id="contracts-list"></div>
+    <p class="more-link"><span class="i-en">Check that <code>distributor.nft()</code> equals the NFT, <code>nft.distributor()</code> equals the Distributor, and <code>distributor.token()</code> equals the token.</span><span class="i-zh" lang="zh-CN">请核对：<code>distributor.nft()</code> 等于 NFT 合约，<code>nft.distributor()</code> 等于 Distributor 合约，<code>distributor.token()</code> 等于代币合约。</span></p>
+  </section>
+  <section class="sec" id="rules" aria-labelledby="rules-h">
+    <div class="sec-head">
+      <p class="kicker"><i class="node"></i><span class="i-en">Rules</span><span class="i-zh" lang="zh-CN">规则</span></p>
+      <h2 id="rules-h" class="display h2"><span class="i-en">Every rule, as the contracts enforce it</span><span class="i-zh" lang="zh-CN">全部规则，均由合约强制执行</span></h2>
+    </div>
+    <div class="rules">
+      <article class="rule"><h3><span class="i-en">Who can mint</span><span class="i-zh" lang="zh-CN">谁可以铸造</span></h3><p><span class="i-en">Only a Binance Agentic Wallet that owns a SPACE ID <code>.ai</code> Agent ID. Every mint passes <code>agentId = uint256(keccak256(bytes(handle)))</code> and the contract checks the caller owns it in the registry. Limits follow the Agent ID, not the wallet.</span><span class="i-zh" lang="zh-CN">只有拥有 SPACE ID <code>.ai</code> Agent ID 的 Binance Agentic Wallet。每次铸造都传入 <code>agentId = uint256(keccak256(bytes(handle)))</code>，合约会在注册表中检查调用者是否拥有它。额度跟随 Agent ID，而不是钱包。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Per Agent ID</span><span class="i-zh" lang="zh-CN">每个 Agent ID</span></h3><p><span class="i-en">1 free mint (Free, or Invite-free through an inviter) and 5 paid at <b>0.003 BNB</b>. Each other Agent ID it invites adds +1 paid, up to +5 (10 paid). One paid mint at <b>0.0015 BNB</b> on the mint that first binds an inviter.</span><span class="i-zh" lang="zh-CN">1 个免费铸造（普通免费，或通过邀请人的邀请免费）和 5 个付费（每个 <b>0.003 BNB</b>）。每邀请一个其他 Agent ID 增加 1 个付费额度，最多 +5（付费共 10 个）。首次绑定邀请人的那次铸造可以 <b>0.0015 BNB</b> 付费铸造 1 个。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Supply</span><span class="i-zh" lang="zh-CN">总量</span></h3><p><span class="i-en">7,777 trees: Free 2,200 · Invite 1,800 · Paid 3,377 · Reserve 400. Reserve trees are minted by the project before close for giveaways and partners, at 1× weight and with no paid quota.</span><span class="i-zh" lang="zh-CN">7,777 棵树：免费 2,200 · 邀请 1,800 · 付费 3,377 · 预留 400。预留树由项目方在铸造结束前铸造，用于赠送和合作方，权重 1×，不增加付费额度。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Invites</span><span class="i-zh" lang="zh-CN">邀请</span></h3><p><span class="i-en">Each tree can invite 2 Agent IDs; each invite adds a glowing root and a stage (max stage 3). An Agent ID binds to an inviter once. It can’t invite itself or the wallet holding the tree.</span><span class="i-zh" lang="zh-CN">每棵树可以邀请 2 个 Agent ID；每次邀请增加一条发光的根并升一个阶段（最高第 3 阶段）。一个 Agent ID 只能绑定一次邀请人，不能邀请自己，也不能邀请持有该树的钱包。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Window and close</span><span class="i-zh" lang="zh-CN">铸造窗口与结束</span></h3><p><span class="i-en">72 hours from <code>openMint()</code>. The window closes the moment paid sells out, or anyone calls <code>close()</code> after 72h.</span><span class="i-zh" lang="zh-CN">从 <code>openMint()</code> 起 72 小时。付费部分售罄即刻结束，否则 72 小时后任何人都可以调用 <code>close()</code> 结束。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Reveal</span><span class="i-zh" lang="zh-CN">开图</span></h3><p><span class="i-en">On sell-out the contract commits to a future block; anyone then calls <code>reveal()</code>, and that block hash shuffles all trees into Common 5,590 · Uncommon 1,555 · Rare 555 · Legendary 76 · World Tree 1. Rarity is unknown to everyone before close.</span><span class="i-zh" lang="zh-CN">售罄后合约锁定一个未来区块，随后任何人都可以调用 <code>reveal()</code>，由该区块哈希把所有树随机分为：普通 5,590 · 罕见 1,555 · 稀有 555 · 传说 76 · 世界之树 1。铸造结束前任何人都不知道稀有度。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Token launch</span><span class="i-zh" lang="zh-CN">代币上线</span></h3><p><span class="i-en">The ownerless Distributor’s permissionless <code>finalize()</code> pairs 200M tokens with 80% of the raised BNB on PancakeSwap V2 and burns the LP tokens. 20% of the BNB goes to the creator payout address. No team tokens, no tax, no blacklist.</span><span class="i-zh" lang="zh-CN">无 owner 的 Distributor 合约中任何人都可调用的 <code>finalize()</code>，会把 2 亿枚代币与募集 BNB 的 80% 在 PancakeSwap V2 组成流动性，并销毁 LP 代币。20% 的 BNB 进入创作者收款地址。无团队代币，无交易税，无黑名单。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Airdrop</span><span class="i-zh" lang="zh-CN">空投</span></h3><p><span class="i-en">400M by mint weight: Paid 3×, Invite 1.5×, Free and Reserve 1×. Paid trees claim 100% at launch; others 50% at launch and 50% over 14 days. Unclaimed airdrop is burned after 30 days. Claims follow the current holder.</span><span class="i-zh" lang="zh-CN">4 亿枚按铸造权重分配：付费 3×，邀请 1.5×，免费和预留 1×。付费树上线时可领取 100%；其他树上线时领取 50%，剩余 50% 在 14 天内释放。30 天未领取的空投将被销毁。领取权归当前持有者。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Holder rewards</span><span class="i-zh" lang="zh-CN">持有者奖励</span></h3><p><span class="i-en">300M stream over year one and 50M over year two, by reward weight: mint type × rarity (1×, 1.5×, 3×, 5×, 10×) × invites.</span><span class="i-zh" lang="zh-CN">第一年释放 3 亿，第二年释放 5,000 万，按奖励权重分配：铸造类型 × 稀有度（1×、1.5×、3×、5×、10×）× 邀请。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Weekly burn</span><span class="i-zh" lang="zh-CN">每周销毁</span></h3><p><span class="i-en">50M tokens in 52 weekly steps (~961,538 each) during year one. The burn runs automatically whenever holders claim their airdrop or rewards, and anyone can also trigger it with <code>burnScheduled()</code> once a week is due.</span><span class="i-zh" lang="zh-CN">第一年内分 52 周销毁 5,000 万枚（每周约 961,538 枚）。每当持有者领取空投或奖励时会自动执行销毁；到期后任何人也可以调用 <code>burnScheduled()</code> 触发。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Royalties and selling</span><span class="i-zh" lang="zh-CN">版税与出售</span></h3><p><span class="i-en">5% royalty on secondary sales, fixed in the contract (ERC-2981). Trees are normal BEP-721s; the Agent ID is soulbound and the mint quota never moves with a tree.</span><span class="i-zh" lang="zh-CN">二级市场交易 5% 版税，写死在合约中（ERC-2981）。树是普通的 BEP-721；Agent ID 是灵魂绑定的，铸造额度不会随树转移。</span></p></article>
+      <article class="rule"><h3><span class="i-en">Owner powers</span><span class="i-zh" lang="zh-CN">项目方权限</span></h3><p><span class="i-en">Before metadata is frozen: the image location and an optional stage module (art only). The owner cannot move mint funds, token buckets, prices, caps or royalties. After final images are live, metadata is frozen and ownership renounced.</span><span class="i-zh" lang="zh-CN">元数据冻结前：图片存放位置和一个可选的阶段模块（只影响图片）。项目方无法动用铸造资金、代币分配、价格、上限或版税。最终图片上线后，元数据冻结并放弃所有权。</span></p></article>
+    </div>
+  </section>
+  <section class="sec" id="refund" aria-labelledby="refund-h">
+    <div class="sec-head">
+      <p class="kicker"><i class="node"></i><span class="i-en">Refund guarantee</span><span class="i-zh" lang="zh-CN">退款保障</span></p>
+      <h2 id="refund-h" class="display h2"><span class="i-en">No sell-out, no launch, <em>80% back</em></span><span class="i-zh" lang="zh-CN">不售罄就不发币，<em>退回 80%</em></span></h2>
+    </div>
+    <div class="refund card">
+      <h3 class="card-h"><span class="i-en">The refund rule</span><span class="i-zh" lang="zh-CN">退款规则</span></h3>
+      <p><span class="i-en">If the 3,377 paid trees don’t sell out in 72 hours, the launch doesn’t happen. Whoever holds a paid tree can call <code>refund(tokenId)</code> and get <b>80%</b> of what was paid back; that tree is burned. The other 20% goes to the creator’s payout address. Free trees have nothing to refund.</span><span class="i-zh" lang="zh-CN">如果 3,377 棵付费树在 72 小时内没有售罄，就不会发币。任何持有付费树的人都可以调用 <code>refund(tokenId)</code> 拿回所付价格的 <b>80%</b>，该树会被销毁。另外 20% 进入创作者收款地址。免费树没有可退的金额。</span></p>
+    </div>
+    <ol class="steps steps-tight">
+      <li><span class="i-en"><b>Window ends without a sell-out.</b> Anyone calls <code>close()</code>; the status reads “refunds open”.</span><span class="i-zh" lang="zh-CN"><b>铸造窗口结束且未售罄。</b>任何人调用 <code>close()</code>，状态显示“退款已开放”。</span></li>
+      <li><span class="i-en"><b>Refund follows the holder.</b> Whoever holds the paid tree at refund time gets the 80%, priced at what that tree was minted for.</span><span class="i-zh" lang="zh-CN"><b>退款归持有者。</b>退款时持有该付费树的人获得 80%，按该树当初的铸造价格计算。</span></li>
+      <li><span class="i-en"><b>Use the Refund prompt</b> on the <a href="mint.html">Mint</a> page. It checks <code>mintTypeOf</code> and <code>pricePaidOf</code> for each tree first.</span><span class="i-zh" lang="zh-CN"><b>使用<a href="mint.html">铸造</a>页面的退款提示词。</b>它会先检查每棵树的 <code>mintTypeOf</code> 和 <code>pricePaidOf</code>。</span></li>
+      <li><span class="i-en"><b>No refund deadline.</b> The refundable 80% stays in the NFT contract until each holder claims it; only the 20% payout can leave.</span><span class="i-zh" lang="zh-CN"><b>退款没有截止时间。</b>可退的 80% 一直留在 NFT 合约中，直到每位持有者领取；只有 20% 的收款可以转出。</span></li>
+    </ol>
+  </section>
+  <section class="sec" id="agents" aria-labelledby="agents-h">
+    <div class="sec-head">
+      <p class="kicker"><i class="node"></i><span class="i-en">For agents</span><span class="i-zh" lang="zh-CN">给 Agent</span></p>
+      <h2 id="agents-h" class="display h2"><span class="i-en">Machine-readable instructions</span><span class="i-zh" lang="zh-CN">机器可读的说明</span></h2>
+      <p class="sec-lede"><span class="i-en">Point your agent at these files. They are generated from the same config and ABIs as this site, with every address, function signature and revert reason.</span><span class="i-zh" lang="zh-CN">把这些文件发给你的 Agent。它们与本站使用同一份配置和 ABI 生成，包含所有地址、函数签名和报错原因。</span></p>
+    </div>
+    <div class="agent-links">
+      <a class="card agent-link" href="llms.txt"><b>llms.txt</b><span><span class="i-en">Full reference: contracts, rules, ABI, error selectors, mint procedure.</span><span class="i-zh" lang="zh-CN">完整参考：合约、规则、ABI、错误选择器、铸造流程（含中文说明）。</span></span></a>
+      <a class="card agent-link" href="skill.md"><b>skill.md</b><span><span class="i-en">Short skill card for Binance Agentic Wallet agents, with the action table.</span><span class="i-zh" lang="zh-CN">给 Binance Agentic Wallet Agent 的简短技能卡，含操作表（含中文说明）。</span></span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <div>
+      <p class="brand display"><a href="index.html" class="brand-link">Rootlinks</a></p>
+      <p class="fine foot-nav"><a href="mint.html"><span class="i-en">Mint</span><span class="i-zh" lang="zh-CN">铸造</span></a> · <a href="lookup.html"><span class="i-en">Lookup</span><span class="i-zh" lang="zh-CN">查询</span></a> · <a href="sell.html"><span class="i-en">Sell</span><span class="i-zh" lang="zh-CN">出售</span></a> · <a href="docs.html"><span class="i-en">Docs</span><span class="i-zh" lang="zh-CN">文档</span></a></p>
+      <p class="fine lang-links" aria-label="Language"><a href="#" data-set-lang="en" lang="en">English</a> · <a href="#" data-set-lang="zh" lang="zh-CN">中文</a></p>
+      <p class="fine"><span class="i-en">Follow <a href="https://x.com/rootlinks_nft" target="_blank" rel="noopener">@rootlinks_nft</a> on X. For agents: <a href="llms.txt">llms.txt</a> · <a href="skill.md">skill.md</a>. <a href="CREDITS.md">Credits</a>.</span><span class="i-zh" lang="zh-CN">在 X 上关注 <a href="https://x.com/rootlinks_nft" target="_blank" rel="noopener">@rootlinks_nft</a>。给 Agent 看的文件：<a href="llms.txt">llms.txt</a> · <a href="skill.md">skill.md</a>。<a href="CREDITS.md">致谢</a>。</span></p>
+    </div>
+    <p class="disclaimer" id="disclaimer"><span class="i-en">Rootlinks is a community project. It is not affiliated with or endorsed by Binance, SPACE ID or Element. Nothing here is financial advice or a promise of profit. NFTs and tokens can lose some or all of their value. Read the contracts, check every address, and only mint what you can afford to lose.</span><span class="i-zh" lang="zh-CN">Rootlinks 是社区项目，与 Binance（币安）、SPACE ID 及 Element 无任何关联，也未获其背书。本站内容不构成投资建议，也不承诺任何收益。NFT 和代币可能部分或全部贬值。请阅读合约、核对每一个地址，只用你能承受损失的资金铸造。</span></p>
+  </div>
+</footer>
+
+<nav class="dock" id="dock" aria-label="Pages" data-zh-aria-label="页面">
+  <a href="index.html" data-label="Home" aria-label="Home" data-zh-aria-label="首页"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V12"/><path d="M12 12c0-4.5 3.4-7 8-7 0 4.5-3.4 7-8 7zM12 14c0-3.4-2.8-5.6-6.8-5.6 0 3.4 2.8 5.6 6.8 5.6z"/><path d="M8 21h8"/></svg><span aria-hidden="true"><i class="i-en">Home</i><i class="i-zh" lang="zh-CN">首页</i></span></a>
+  <a href="mint.html" data-label="Mint" aria-label="Mint" data-zh-aria-label="铸造"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21V11"/><path d="M12 11c0-4 3-6 7-6 0 4-3 6-7 6zM12 13c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg><span aria-hidden="true"><i class="i-en">Mint</i><i class="i-zh" lang="zh-CN">铸造</i></span></a>
+  <a href="lookup.html" data-label="Lookup" aria-label="Lookup" data-zh-aria-label="查询"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></svg><span aria-hidden="true"><i class="i-en">Lookup</i><i class="i-zh" lang="zh-CN">查询</i></span></a>
+  <a href="sell.html" data-label="Sell" aria-label="Sell" data-zh-aria-label="出售"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12.5l8-8H20v8.5l-8 8z"/><circle cx="15.5" cy="8.5" r="1.4"/></svg><span aria-hidden="true"><i class="i-en">Sell</i><i class="i-zh" lang="zh-CN">出售</i></span></a>
+  <a href="docs.html" class="on" aria-current="page" data-label="Docs" aria-label="Docs" data-zh-aria-label="文档"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M10 12h5M10 16h5"/></svg><span aria-hidden="true"><i class="i-en">Docs</i><i class="i-zh" lang="zh-CN">文档</i></span></a>
+  <a href="https://x.com/rootlinks_nft" target="_blank" rel="noopener" data-label="X" aria-label="X"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20" /></svg><span aria-hidden="true">X</span></a>
+  <a href="#" id="lang-toggle" class="dock-lang" role="button" data-label="Language" aria-label="切换到中文 (Chinese)" data-zh-aria-label="Switch to English"><b class="lang-glyph" aria-hidden="true"><i class="i-en" lang="zh-CN">中</i><i class="i-zh" lang="en">EN</i></b><span aria-hidden="true"><i class="i-en">中文</i><i class="i-zh" lang="zh-CN">English</i></span></a>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<noscript><p class="noscript">Live counters, prompts and lookup need JavaScript. Everything else on this page works without it. / 实时数据、提示词和查询需要 JavaScript，本页其他内容无需 JavaScript 也可正常浏览。</p></noscript>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
