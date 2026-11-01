@@ -64,13 +64,12 @@
         </div>
       </div>
       <div class="mc-total">
-        <span class="ticker big" id="t-total" data-value="0">0</span><span class="of"><span class="i-en">/ 7,777 planted</span><span class="i-zh" lang="zh-CN">/ 7,777 已种下</span></span>
+        <span class="ticker big" id="t-total" data-value="0">0</span><span class="of"><span class="i-en">/ 5,555 planted</span><span class="i-zh" lang="zh-CN">/ 5,555 已种下</span></span>
       </div>
       <div class="tiers" id="tiers">
-        <div class="tier" data-tier="free"><div class="tier-row"><span><span class="i-en">Free</span><span class="i-zh" lang="zh-CN">免费</span></span><span><b class="ticker" data-value="0">0</b> / 2,200</span></div><div class="bar"><i></i></div></div>
-        <div class="tier" data-tier="invite"><div class="tier-row"><span><span class="i-en">Invite free</span><span class="i-zh" lang="zh-CN">邀请免费</span></span><span><b class="ticker" data-value="0">0</b> / 1,800</span></div><div class="bar"><i></i></div></div>
-        <div class="tier" data-tier="paid"><div class="tier-row"><span><span class="i-en">Paid · decides the launch</span><span class="i-zh" lang="zh-CN">付费 · 决定能否发币</span></span><span><b class="ticker" data-value="0">0</b> / 3,377</span></div><div class="bar bar-gold"><i></i></div></div>
-        <div class="tier" data-tier="reserve"><div class="tier-row"><span><span class="i-en">Reserve</span><span class="i-zh" lang="zh-CN">预留</span></span><span><b class="ticker" data-value="0">0</b> / 400</span></div><div class="bar"><i></i></div></div>
+        <div class="tier" data-tier="free"><div class="tier-row"><span><span class="i-en">Free</span><span class="i-zh" lang="zh-CN">免费</span></span><span><b class="ticker" data-value="0">0</b> / 1,500</span></div><div class="bar"><i></i></div></div>
+        <div class="tier" data-tier="invite"><div class="tier-row"><span><span class="i-en">Invite free</span><span class="i-zh" lang="zh-CN">邀请免费</span></span><span><b class="ticker" data-value="0">0</b> / 1,500</span></div><div class="bar"><i></i></div></div>
+        <div class="tier" data-tier="paid"><div class="tier-row"><span><span class="i-en">Paid · decides the launch</span><span class="i-zh" lang="zh-CN">付费 · 决定能否发币</span></span><span><b class="ticker" data-value="0">0</b> / 2,555</span></div><div class="bar bar-gold"><i></i></div></div>
       </div>
       <div class="mc-foot">
         <span><span class="i-en">Raised</span><span class="i-zh" lang="zh-CN">已募集</span> <b id="raised">0</b> BNB</span>
@@ -118,6 +117,18 @@
         </div>
       </div>
     </div>
+  </section>
+  <section class="sec" id="your-tree" aria-labelledby="your-tree-h">
+    <div class="sec-head">
+      <p class="kicker"><i class="node"></i><span class="i-en">Your tree</span><span class="i-zh" lang="zh-CN">你的树</span></p>
+      <h2 id="your-tree-h" class="display h2"><span class="i-en">Just minted? Meet your tree</span><span class="i-zh" lang="zh-CN">刚铸造完？来看看你的树</span></h2>
+      <p class="sec-lede"><span class="i-en">Enter your tree number. It reveals about 10 seconds after the mint. Copy your invite code, share it, or save the image.</span><span class="i-zh" lang="zh-CN">输入你的树编号。铸造约 10 秒后开图。可以复制邀请码、分享，或保存图片。</span></p>
+    </div>
+    <form class="card lookup-form yt-form" id="yt-form">
+      <input id="yt-q" name="tree" placeholder="Tree #, e.g. 42" data-zh-placeholder="树编号，例如 42" aria-label="Tree number" data-zh-aria-label="树编号" inputmode="numeric" autocomplete="off" spellcheck="false">
+      <button class="btn btn-gold" type="submit"><span class="i-en">Show my tree</span><span class="i-zh" lang="zh-CN">查看我的树</span></button>
+    </form>
+    <div id="yt-out" aria-live="polite"></div>
   </section>
   <section class="sec" id="invite" aria-labelledby="invite-h">
     <div class="sec-head">

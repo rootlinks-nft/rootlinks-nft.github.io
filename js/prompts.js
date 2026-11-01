@@ -19,6 +19,20 @@ export function normalizeHandle(raw) {
   if (h.endsWith(".ai")) h = h.slice(0, -3);
   return /^[a-z0-9]+$/.test(h) ? h : "";
 }
+/**
+ * Parse an invite ref from a link (?ref=). The contract binds invites to the inviter's tree token id,
+ * so a tree number is used as-is; a .ai name or 0x address is returned for a read-only lookup.
+ * @returns {{kind:"tree",id:string}|{kind:"name",handle:string}|{kind:"addr",address:string}|null}
+ */
+export function parseRef(raw, maxSupply = 5555) {
+  const v = String(raw ?? "").normalize("NFKC").replace(/[\u200B-\u200D\uFEFF]/g, "").trim().slice(0, 64);
+  if (!v) return null;
+  const n = v.replace(/^(tree)?\s*#?/i, "");
+  if (/^\d{1,5}$/.test(n)) return +n >= 1 && +n <= maxSupply ? { kind: "tree", id: String(+n) } : null;
+  if (/^0x[0-9a-fA-F]{40}$/.test(v)) return { kind: "addr", address: getAddress(v.toLowerCase()) };
+  const h = normalizeHandle(v);
+  return h && h.length <= 63 ? { kind: "name", handle: h } : null;
+}
 /** Agent ID token id = uint256(keccak256(bytes(handle))). */
 export const agentIdOf = (handle) => BigInt(keccakId(handle));
 
@@ -204,8 +218,8 @@ export function buildPrompts(input = {}, cfg = CONFIG, lang = "en") {
   out.push(wrap({
     id: "refund",
     title: Z("Refund (only if paid did not sell out)", "退款（仅限付费部分未售罄时）"),
-    summary: Z("If the 72h window ends before 3,377 paid trees sell, the current holder of each PAID tree can burn it for 80% of its price.",
-               "如果 72 小时窗口结束时 3,377 棵付费树未售罄，每棵 PAID 树的当前持有者可以销毁该树，拿回其价格的 80%。"),
+    summary: Z("If the 72h window ends before 2,555 paid trees sell, the current holder of each PAID tree can burn it for 80% of its price.",
+               "如果 72 小时窗口结束时 2,555 棵付费树未售罄，每棵 PAID 树的当前持有者可以销毁该树，拿回其价格的 80%。"),
     contract: "nft",
     checks: [
       Z(`${nftRead} outcome() is 2 (FAILED). If it is 0 or 1, stop: refunds are not open.`, `${nftRead}outcome() 为 2（FAILED）。如果是 0 或 1，停止：退款未开放。`),

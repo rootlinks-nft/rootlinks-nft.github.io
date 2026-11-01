@@ -77,7 +77,7 @@ export async function multi(calls, chunk = 400) {
   return out;
 }
 
-const NFT_STATE_FNS = ["freeMinted", "inviteMinted", "paidMinted", "reserveMinted", "totalMinted", "totalBurned", "mintStart", "mintEnd", "outcome", "revealed", "totalRaised"];
+const NFT_STATE_FNS = ["freeMinted", "inviteMinted", "paidMinted", "totalMinted", "totalBurned", "mintStart", "mintEnd", "outcome", "totalRaised"];
 const DIST_STATE_FNS = ["finalized", "launchTime", "scheduledBurned", "burnWeeksDone", "burnWeeksDue", "scheduledBurnDue", "airdropClaimedTotal", "rewardsEmitted", "token"];
 
 /** Mint + launch state. Returns null pieces for unconfigured contracts. */
@@ -139,7 +139,7 @@ export async function agentMintData(agentId) {
 
 /**
  * Trees held by `owner`. The NFT is not enumerable, so instead of scanning Transfer logs (public
- * RPCs cap log ranges) we batch ownerOf(1..totalMinted) through Multicall3: ~16 calls for 7,777.
+ * RPCs cap log ranges) we batch ownerOf(1..totalMinted) through Multicall3: ~14 calls for 5,555.
  */
 export async function treesOf(owner, onProgress) {
   if (!configured("nft")) return [];

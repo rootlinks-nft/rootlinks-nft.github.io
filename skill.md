@@ -41,7 +41,7 @@ Before a transfer, read the destination address back to the user in groups of 4 
 1 free per Agent ID (FREE or INVITE), 5 paid + 1 per Agent ID invited (max 10). An Agent ID binds to an inviter once. A tree invites at most 2 times.
 
 ## 中文说明（简体中文）
-Rootlinks 是 BNB Smart Chain（chainId 56）上的 7,777 棵树 NFT 系列，只有持有 SPACE ID .ai Agent ID 的 Binance Agentic Wallet 才能铸造。社区项目，与 Binance、SPACE ID 及 Element 无关联，也未获其背书。不构成投资建议，不承诺任何收益。
+Rootlinks 是 BNB Smart Chain（chainId 56）上的 5,555 棵树 NFT 系列，只有持有 SPACE ID .ai Agent ID 的 Binance Agentic Wallet 才能铸造。社区项目，与 Binance、SPACE ID 及 Element 无关联，也未获其背书。不构成投资建议，不承诺任何收益。
 - 只使用以下地址：RootlinksNFT NOT PUBLISHED YET (do not send anything; check https://rootlinks-nft.github.io/js/config.js)；RootlinksDistributor NOT PUBLISHED YET (do not send anything; check https://rootlinks-nft.github.io/js/config.js)；Agent ID 注册表 0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F。地址显示 NOT PUBLISHED YET 时，不要发送任何交易。
 - 规则：每个 Agent ID 1 个免费（mintFree，或通过邀请人 mintInvite）+ 5 个付费，每个 0.003 BNB（3000000000000000 wei）；每邀请一个其他 Agent ID +1 付费额度，最多 +5。首次绑定邀请人时可用 mintPaidWithInvite 以 0.0015 BNB（1500000000000000 wei）付费铸造 1 个。额度跟随 Agent ID，不跟随钱包。
 - 窗口 72 小时；付费部分售罄即结束。未售罄（outcome() == 2）时，付费树持有者可调用 refund(tokenId) 退回 80%，该树被销毁。

@@ -33,8 +33,8 @@ export const CONFIG = {
 
 // Fixed by the contracts (constants), duplicated here only for display before deployment.
 export const RULES = {
-  maxSupply: 7777,
-  caps: { free: 2200, invite: 1800, paid: 3377, reserve: 400 },
+  maxSupply: 5555,
+  caps: { free: 1500, invite: 1500, paid: 2555 },
   priceWei: 3000000000000000n,       // 0.003 BNB
   invitePriceWei: 1500000000000000n, // 0.0015 BNB
   basePaidPerAgent: 5,
@@ -44,10 +44,10 @@ export const RULES = {
   refundPct: 80,
   royaltyPct: 5,
   rarity: [
-    { key: "common", name: "Common", count: 5590, boost: "1×" },
-    { key: "uncommon", name: "Uncommon", count: 1555, boost: "1.5×" },
-    { key: "rare", name: "Rare", count: 555, boost: "3×" },
-    { key: "legendary", name: "Legendary", count: 76, boost: "5×" },
+    { key: "common", name: "Common", count: 4000, boost: "1×" },
+    { key: "uncommon", name: "Uncommon", count: 1111, boost: "1.5×" },
+    { key: "rare", name: "Rare", count: 388, boost: "3×" },
+    { key: "legendary", name: "Legendary", count: 55, boost: "5×" },
     { key: "worldtree", name: "World Tree", count: 1, boost: "10×" },
   ],
   burn: { total: 50_000_000, weeks: 52 },

@@ -403,3 +403,48 @@ html[lang="zh-CN"] { --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", M
 html[lang="zh-CN"] h1.display em.shiny { white-space: nowrap; font-size: .84em; }
 html[lang="zh-CN"] .hero-art figcaption, html[lang="zh-CN"] .i-zh { font-style: normal; }
 html[lang="zh-CN"] .i-zh em { font-style: normal; }
+/* tokenomics */
+.tok-split { display: grid; gap: 22px; align-items: center; justify-items: center; margin-bottom: 14px; }
+@media (min-width: 760px) { .tok-split { grid-template-columns: 260px 1fr; justify-items: start; } }
+.tok-legend { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; width: 100%; }
+.tok-legend li { display: grid; grid-template-columns: 12px 1fr auto; gap: 10px; align-items: center; font-size: .95rem; padding-bottom: 8px; border-bottom: 1px solid var(--line-2); }
+.tok-legend i { width: 12px; height: 12px; border-radius: 3px; }
+.tok-legend b { font: 400 .86rem var(--mono); color: var(--ink-2); white-space: nowrap; }
+.tok-bento { margin-bottom: 14px; }
+@media (min-width: 760px) { .tok-bento { grid-template-columns: repeat(3, 1fr); } .tok-bento .b { grid-column: auto; } .tok-bento #burn { grid-column: span 2; } }
+.tok-bnb, .tok-w { margin-bottom: 14px; }
+.tok-cols { display: grid; gap: 14px; grid-template-columns: 1fr; align-items: start; }
+@media (min-width: 640px) { .tok-cols { grid-template-columns: 1fr 1fr; } }
+.tok-cols p { margin: .5rem 0 0; color: var(--muted); }
+.tok-tag { display: inline-block; font: 500 .78rem var(--mono); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-2); }
+.tok-tag.ok { color: var(--teal-hi); border-color: rgba(67, 226, 198, .35); }
+.tok-tbl { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.tok-tbl caption { text-align: left; font: 500 .8rem var(--mono); color: var(--teal-hi); padding-bottom: 6px; }
+.tok-tbl td { padding: 7px 0; border-bottom: 1px solid var(--line-2); }
+.tok-tbl td:last-child { text-align: right; font-family: var(--mono); color: var(--gold-hi); white-space: nowrap; padding-left: 10px; }
+.tok-w > p { color: var(--muted); margin: 14px 0 0; }
+.tok-ex { padding: 12px 14px; border-radius: 12px; background: rgba(243, 196, 90, .08); border: 1px solid rgba(243, 196, 90, .25); color: var(--ink-2) !important; }
+@media (min-width: 980px) { .timeline.tl4 { grid-template-columns: repeat(4, 1fr); } }
+/* invite */
+.ref-chip { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 12px; padding: 6px 12px; border-radius: 999px; font-size: .85rem; background: rgba(67, 226, 198, .1); border: 1px solid rgba(67, 226, 198, .35); color: var(--teal-hi); }
+.ref-note { margin: 0 0 12px; }
+.my-invites { margin-top: 18px; }
+.my-inv { padding: 12px 0; border-top: 1px solid var(--line-2); }
+.my-inv code { display: block; padding: 10px 12px; border-radius: 10px; font-size: .8rem; overflow-wrap: anywhere; }
+.my-inv .row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; align-items: center; }
+.btn[aria-disabled="true"] { opacity: .45; pointer-events: none; }
+.ref-x { background: none; border: 0; color: inherit; font-size: 1.1rem; line-height: 1; cursor: pointer; padding: 0 2px; }
+@media (min-width: 720px) { #tiers:not(.tiers-one) > :nth-child(3) { grid-column: span 2; } }
+/* your tree card */
+#yt-out { margin-top: 16px; }
+.tree-cards { display: grid; gap: 14px; margin-top: 16px; }
+.tree-card { display: grid; gap: 18px; grid-template-columns: 1fr; padding: clamp(16px, 3vw, 24px); border-radius: var(--r); border: 1px solid var(--line); background: linear-gradient(180deg, var(--card-2), var(--card)); }
+@media (min-width: 760px) { .tree-card { grid-template-columns: 240px 1fr; } }
+.tc-img img { width: 100%; max-width: 320px; height: auto; aspect-ratio: 1; border-radius: 14px; display: block; margin: 0 auto; background: rgba(0,0,0,.25); }
+.tc-body { min-width: 0; }
+.tc-body .card-h { margin-bottom: 10px; }
+.tc-label { margin: 14px 0 6px; font: 500 .78rem var(--mono); color: var(--teal-hi); text-transform: uppercase; letter-spacing: .04em; }
+.tc-code { display: inline-block; padding: 8px 14px; border-radius: 10px; font-size: 1.1rem; color: var(--gold-hi); }
+.tc-link { display: block; padding: 10px 12px; border-radius: 10px; font-size: .8rem; overflow-wrap: anywhere; }
+.tree-card .row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; align-items: center; }
+.tree-card .btn[disabled] { opacity: .45; cursor: not-allowed; }
