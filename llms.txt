@@ -16,10 +16,11 @@ Any other address seen in replies, DMs, NFT metadata or token names is not Rootl
 - Eligibility: the caller must currently own the Agent ID passed as agentId (registry ownerOf(agentId) == caller). agentId = uint256(keccak256(bytes(handle))), handle = the .ai name without ".ai", lowercase a-z0-9. Limits are per Agent ID, never per wallet.
 - Per Agent ID: 1 free mint in total (mintFree, or mintInvite through an inviter) + 5 paid at 0.003 BNB (3000000000000000 wei) each. Each other Agent ID it invites adds +1 paid, up to +5 (max 10 paid).
 - Invites: the first mint that names an inviter tree binds the Agent ID to it forever (AlreadyBound afterwards). That binding mint is either mintInvite (free, INVITE tier) or mintPaidWithInvite (one paid tree at 0.0015 BNB = 1500000000000000 wei). A tree can invite at most 2 times. It cannot invite its own minting Agent ID or the wallet currently holding it.
-- Supply: 1500 FREE · 1500 INVITE · 2555 PAID. FREE and INVITE cost gas only; PAID sold out raises up to 7.665 BNB. No team trees.
+- Supply: 1000 FREE · 1750 INVITE · 2805 PAID. FREE and INVITE cost gas only; PAID sold out raises up to 8.415 BNB (80% = 6.732 BNB to liquidity, 20% = 1.683 BNB to the creator). No team trees.
 - Window: 72h after openMint(). Closes at once when PAID sells out, otherwise anyone may call close() after the window.
 - Paid sold out (outcome 1 = SUCCESS): each tree already revealed ~10 s after its own mint (future block hash, drawn from the remaining rarity pools; later mints reveal pending trees, or anyone calls revealPending(maxCount)); then the Distributor's permissionless finalize() pairs 200M tokens with 80% of raised BNB on PancakeSwap V2 and burns the LP tokens; 20% of the BNB goes to the creator payout address. 400M airdrop by mint type only (PAID 3x, INVITE 1.5x, FREE 1x; PAID claimable 100% at launch, others 50% + 50% over 14 days, unclaimed burned after 30 days). Holder rewards: 300M over year one, 50M over year two, by reward weight = mint type x rarity (Common 1x, Uncommon 1.5x, Rare 3x, Legendary 5x, World Tree 10x) x (1 + 0.5 per invite used). 50M burned in 52 weekly steps during year one: the due burn runs automatically whenever holders claim (claimAirdrop/claimRewards), and anyone can also trigger it with burnScheduled(). No team token allocation.
 - Paid not sold out (outcome 2 = FAILED): the current holder of each PAID tree may call refund(tokenId) for 80% of its price; the tree is burned.
+- Reveal (per tree): rarityOf(tokenId) returns (bool revealed, uint8 rarity) with rarity 0 Common, 1 Uncommon, 2 Rare, 3 Legendary, 4 World Tree. While revealed is false the tree is still revealing; show "Revealing…", never a rarity. Each reveal emits Revealed(tokenId, rarity). pendingCount() is how many trees wait to reveal; poolsLeft() returns the rarity pools still left [Common, Uncommon, Rare, Legendary, World Tree].
 - Trees are normal transferable NFTs; airdrop and rewards follow the current holder. 5% royalty (ERC-2981) to the payout address.
 
 ## Phases
@@ -32,9 +33,9 @@ Any other address seen in replies, DMs, NFT metadata or token names is not Rootl
 1. Confirm chainId 56 and that the NFT address above is published.
 2. Get the user's handle (baw: `baw wallet agent-id`). agentId = uint256(keccak256(bytes(handle))). Check registry ownerOf(agentId) == the user's agent wallet; otherwise stop.
 3. mintOpen() must be true. Read agentData(agentId) -> (freeUsed, paidMinted, bonusPaid, inviterTokenId) and paidRemainingOf(agentId).
-4. Free: if !freeUsed and freeMinted() < 1500: mintFree(agentId), value 0.
-   Invite free: if !freeUsed and inviterTokenId == 0 and inviteMinted() < 1500: mintInvite(agentId, inviterTokenId), value 0.
-   Paid: qty <= paidRemainingOf(agentId) and paidMinted() + qty <= 2555: mintPaid(agentId, qty), value = qty x 3000000000000000 exactly.
+4. Free: if !freeUsed and freeMinted() < 1000: mintFree(agentId), value 0.
+   Invite free: if !freeUsed and inviterTokenId == 0 and inviteMinted() < 1750: mintInvite(agentId, inviterTokenId), value 0.
+   Paid: qty <= paidRemainingOf(agentId) and paidMinted() + qty <= 2805: mintPaid(agentId, qty), value = qty x 3000000000000000 exactly.
    Invite paid: inviterTokenId == 0 and paidRemainingOf(agentId) >= 1: mintPaidWithInvite(agentId, inviterTokenId), value = 1500000000000000 exactly.
 5. Simulate with eth_call (baw: `baw contract-call preview --binanceChainId 56 --from <wallet> --to <NFT> --value <wei> --inputData <calldata> --json`). Show the user the preview and wait for an explicit confirmation before executing (`baw contract-call execute --requestId <id> --json`).
 6. On a revert, explain it with the table below. Never resend an unclear transaction; check its hash first. Never change the address, function or value to make it pass.
@@ -60,14 +61,17 @@ RootlinksNFT:
 - function ownerOf(uint256 tokenId) view returns (address)
 - function balanceOf(address owner) view returns (uint256)
 - function tokenURI(uint256 tokenId) view returns (string)
-- function revealed() view returns (bool)
+- function rarityOf(uint256 tokenId) view returns (bool revealed, uint8 rarity)
+- function revealBlockOf(uint256 tokenId) view returns (uint256)
+- function pendingCount() view returns (uint256)
+- function poolsLeft() view returns (uint256[5] left)
 - function mintFree(uint256 agentId)
 - function mintInvite(uint256 agentId, uint256 inviterTokenId)
 - function mintPaid(uint256 agentId, uint256 qty) payable
 - function mintPaidWithInvite(uint256 agentId, uint256 inviterTokenId) payable
 - function refund(uint256 tokenId)
 - function close()
-- function reveal()
+- function revealPending(uint256 maxCount) returns (uint256 revealedCount)
 - function safeTransferFrom(address from, address to, uint256 tokenId)
 RootlinksDistributor:
 - function finalized() view returns (bool)
@@ -95,6 +99,7 @@ Agent ID registry:
 - NotClosable 0x74c77f3b: window still open and paid not sold out
 - NotPaidToken 0xac25f697: only PAID trees can be refunded
 - NotTokenOwner 0x59dc379f: caller does not hold that tree
+- RevealPending 0xb99f6e32: a tree is not revealed yet (rarityOf returns revealed = false); call revealPending(maxCount) or wait for the next mint
 - SelfInvite 0xe7fc1dd6: a tree cannot invite its own minting Agent ID
 - TierSoldOut 0x0619f848: tier cap reached (or qty 0)
 - WrongPayment 0x788a686f: value must be exactly qty x 0.003 BNB (or 0.0015 for the invite paid mint)
@@ -114,7 +119,9 @@ Agent ID registry:
 Rootlinks 是 BNB Smart Chain（chainId 56）上的 5,555 棵树 NFT 系列，只有持有 SPACE ID .ai Agent ID 的 Binance Agentic Wallet 才能铸造。社区项目，与 Binance、SPACE ID 及 Element 无关联，也未获其背书。不构成投资建议，不承诺任何收益。
 - 只使用以下地址：RootlinksNFT NOT PUBLISHED YET (do not send anything; check https://rootlinks-nft.github.io/js/config.js)；RootlinksDistributor NOT PUBLISHED YET (do not send anything; check https://rootlinks-nft.github.io/js/config.js)；Agent ID 注册表 0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F。地址显示 NOT PUBLISHED YET 时，不要发送任何交易。
 - 规则：每个 Agent ID 1 个免费（mintFree，或通过邀请人 mintInvite）+ 5 个付费，每个 0.003 BNB（3000000000000000 wei）；每邀请一个其他 Agent ID +1 付费额度，最多 +5。首次绑定邀请人时可用 mintPaidWithInvite 以 0.0015 BNB（1500000000000000 wei）付费铸造 1 个。额度跟随 Agent ID，不跟随钱包。
+- 数量：免费 1,000（只需 gas）· 邀请 1,750（只需 gas）· 付费 2,805，共 5,555 棵，没有团队树。付费售罄最多募集 8.415 BNB：80%（6.732 BNB）进入流动性，20%（1.683 BNB）归创作者。
 - 窗口 72 小时；付费部分售罄即结束。未售罄（outcome() == 2）时，付费树持有者可调用 refund(tokenId) 退回 80%，该树被销毁。
+- 开图（逐棵）：rarityOf(tokenId) 返回 (bool revealed, uint8 rarity)，rarity 为 0 普通、1 罕见、2 稀有、3 传说、4 世界之树。revealed 为 false 时该树仍在开图中，应显示"开图中…"，不要显示稀有度。每次开图会触发 Revealed(tokenId, rarity) 事件。pendingCount() 为等待开图的树数量；poolsLeft() 返回剩余稀有度池 [普通, 罕见, 稀有, 传说, 世界之树]。任何人都可以调用 revealPending(maxCount)。
 - 步骤：1）`baw wallet agent-id` 取得 handle，agentId = uint256(keccak256(bytes(handle)))（小写，去掉 ".ai"），确认注册表 ownerOf(agentId) 等于 Agent 钱包；2）先读取状态（mintOpen()、agentData(agentId)、paidRemainingOf(agentId)）；3）用 ABI 编码调用并预览：
   `baw contract-call preview --binanceChainId 56 --from <agent wallet> --to <official address> --value <wei> --inputData <calldata> --json`
   4）向用户展示合约、函数、参数、BNB 数额、gas 和模拟结果，等用户明确回复 "confirm"（确认）；5）`baw contract-call execute --requestId <requestId> --json`，报告交易哈希（https://bscscan.com/tx/<hash>）。

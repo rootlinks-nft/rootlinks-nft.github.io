@@ -218,8 +218,8 @@ export function buildPrompts(input = {}, cfg = CONFIG, lang = "en") {
   out.push(wrap({
     id: "refund",
     title: Z("Refund (only if paid did not sell out)", "退款（仅限付费部分未售罄时）"),
-    summary: Z("If the 72h window ends before 2,555 paid trees sell, the current holder of each PAID tree can burn it for 80% of its price.",
-               "如果 72 小时窗口结束时 2,555 棵付费树未售罄，每棵 PAID 树的当前持有者可以销毁该树，拿回其价格的 80%。"),
+    summary: Z("If the 72h window ends before 2,805 paid trees sell, the current holder of each PAID tree can burn it for 80% of its price.",
+               "如果 72 小时窗口结束时 2,805 棵付费树未售罄，每棵 PAID 树的当前持有者可以销毁该树，拿回其价格的 80%。"),
     contract: "nft",
     checks: [
       Z(`${nftRead} outcome() is 2 (FAILED). If it is 0 or 1, stop: refunds are not open.`, `${nftRead}outcome() 为 2（FAILED）。如果是 0 或 1，停止：退款未开放。`),

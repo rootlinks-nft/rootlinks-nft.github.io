@@ -163,17 +163,30 @@ export async function treesOf(owner, onProgress) {
   return found;
 }
 
-/** tokenURI -> {name, image, attributes} (on-chain base64 JSON). */
+/** Rarity enum order in the contract (rarityOf returns its index). */
+export const RARITY_NAMES = ["Common", "Uncommon", "Rare", "Legendary", "World Tree"];
+
+/**
+ * tokenURI -> {name, image, attributes} (on-chain base64 JSON), plus rarityOf(id) -> (revealed, rarity):
+ * revealed (bool) and rarity (name, only when revealed) come from the contract, not the metadata.
+ */
 export async function treeMeta(ids) {
   if (!configured("nft") || !ids.length) return [];
-  const uris = await multi(ids.map((t) => ({ iface: I.nft, to: CONFIG.nft, fn: "tokenURI", args: [t] })));
-  return uris.map((u, k) => {
-    const out = { id: ids[k], name: `Rootlinks #${ids[k]}`, image: "", attributes: [] };
+  const calls = [];
+  ids.forEach((t) => calls.push({ iface: I.nft, to: CONFIG.nft, fn: "tokenURI", args: [t] }, { iface: I.nft, to: CONFIG.nft, fn: "rarityOf", args: [t] }));
+  const r = await multi(calls);
+  return ids.map((id, k) => {
+    const u = r[2 * k], ro = r[2 * k + 1];
+    const out = { id, name: `Rootlinks #${id}`, image: "", attributes: [], revealed: false, rarity: null };
     try {
       const b64 = u.split(",")[1];
       const json = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0))));
       Object.assign(out, json);
     } catch {}
+    if (ro) {
+      out.revealed = !!ro[0];
+      out.rarity = out.revealed ? RARITY_NAMES[Number(ro[1])] || null : null;
+    }
     return out;
   });
 }

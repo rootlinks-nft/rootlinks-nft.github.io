@@ -397,10 +397,10 @@ async function lookup(q) {
 }
 
 /* ------------------------------------------------------------ "Your tree" card
-   Rarity/stage/image come from tokenURI metadata (contract-agnostic). A tree that is still revealing
-   (no Rarity, or "Unrevealed") is re-read every 5 s for up to 3 min. Inert until CONFIG.nft is set. */
+   Rarity comes from rarityOf(id) -> (revealed, rarity); stage and image from tokenURI metadata. A tree
+   with revealed == false shows "Revealing…" and is re-read every 5 s for up to 3 min. Inert until CONFIG.nft is set. */
 const PLACEHOLDER = "assets/placeholder.webp";
-const isRevealed = (r) => r && r !== "Unrevealed" && r !== "Pending";
+const isRevealed = (r) => !!r; // rarity is a name only once rarityOf() says revealed
 const shareTreeUrl = (id, rarity) => {
   const url = inviteUrl(id);
   const rEn = isRevealed(rarity) ? rarity : "still revealing", rZh = isRevealed(rarity) ? rz(rarity) : "开图中";
@@ -439,8 +439,9 @@ function treeCard(meta) {
   const card = h("article", { class: "tree-card" });
   const render = (m) => {
     const attrs = Object.fromEntries(((m && m.attributes) || []).map((a) => [a.trait_type, a.value]));
-    const rarity = attrs.Rarity;
-    const revealed = live && isRevealed(rarity);
+    // rarityOf(id) -> (revealed, rarity) from the contract decides the Rarity stat; metadata only supplies the image.
+    const revealed = live && !!m && m.revealed === true && !!m.rarity;
+    const rarity = revealed ? m.rarity : undefined;
     const src = live && m.image ? safeImage(m.image) : PLACEHOLDER;
     const img = h("img", { src, alt: id ? `Rootlinks #${id}` : "Seed placeholder", width: 260, height: 260, loading: "lazy", referrerpolicy: "no-referrer" });
     img.addEventListener("error", () => { if (!img.src.endsWith(PLACEHOLDER)) img.src = PLACEHOLDER; }, { once: true });

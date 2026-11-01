@@ -34,7 +34,7 @@ export const CONFIG = {
 // Fixed by the contracts (constants), duplicated here only for display before deployment.
 export const RULES = {
   maxSupply: 5555,
-  caps: { free: 1500, invite: 1500, paid: 2555 },
+  caps: { free: 1000, invite: 1750, paid: 2805 },
   priceWei: 3000000000000000n,       // 0.003 BNB
   invitePriceWei: 1500000000000000n, // 0.0015 BNB
   basePaidPerAgent: 5,
