@@ -448,3 +448,23 @@ html[lang="zh-CN"] .i-zh em { font-style: normal; }
 .tc-link { display: block; padding: 10px 12px; border-radius: 10px; font-size: .8rem; overflow-wrap: anywhere; }
 .tree-card .row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; align-items: center; }
 .tree-card .btn[disabled] { opacity: .45; cursor: not-allowed; }
+
+/* ---------------------------------------------------------------- live rarity + latest trees */
+.rarity-live { margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--line); }
+.rl-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px 18px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.rl-list li { display: flex; justify-content: space-between; gap: 10px; font-size: .88rem; color: var(--ink-2); padding: 8px 12px; border-radius: 12px; border: 1px solid var(--line-2); background: rgba(5, 4, 3, .35); }
+.rl-list li b { font-variant-numeric: tabular-nums; color: var(--gold-hi); font-weight: 600; }
+.rl-list li > span:last-child { color: var(--muted); white-space: nowrap; }
+.rl-pending { color: var(--teal-hi); font-size: .82rem; }
+.latest { margin-top: 26px; }
+.lf-list { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); }
+.lf-card { display: block; border-radius: 14px; overflow: hidden; border: 1px solid var(--line-2); background: #0c0a08; color: var(--ink-2); text-decoration: none; transition: border-color .2s, transform .2s; }
+.lf-card:hover, .lf-card:focus-visible { border-color: var(--line); transform: translateY(-2px); }
+.lf-img { position: relative; display: block; }
+.lf-img img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; background: rgba(0, 0, 0, .25); }
+.lf-badge { position: absolute; left: 8px; bottom: 8px; font-size: .7rem; padding: 3px 8px; border-radius: 99px; background: rgba(5, 4, 3, .8); color: var(--teal-hi); border: 1px solid rgba(67, 226, 198, .25); }
+.lf-badge[hidden] { display: none; }
+.lf-meta { display: flex; justify-content: space-between; gap: 6px; padding: 8px 10px 2px; font-size: .8rem; }
+.lf-meta b { color: var(--gold-hi); font-weight: 600; }
+.lf-type { display: block; padding: 0 10px 9px; font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+.lf-list > .fine { grid-column: 1 / -1; }

@@ -1,6 +1,6 @@
 import { CONFIG, RULES, configured, isAddr } from "./config.js";
 import { buildPrompts, normalizeHandle, parseRef } from "./prompts.js";
-import { readState, resolveAgent, agentMintData, treesOf, treeMeta, inviteInfo } from "./chain.js";
+import { readState, resolveAgent, agentMintData, treesOf, treeMeta, inviteInfo, latestTrees, artUrl, MINT_TYPES } from "./chain.js";
 import { LANG, L, tt, setTT, applyAttrs, wireLang } from "./i18n.js";
 import { starfield, rootSpine, tick, spotlight, groupSpotlight, dock, revealOnScroll, copyText, toast, reduced } from "./effects.js";
 
@@ -299,6 +299,8 @@ async function refreshLive() {
     setTier("invite", Number(n.inviteMinted || 0n), RULES.caps.invite);
     setTier("paid", Number(n.paidMinted || 0n), RULES.caps.paid);
     tick($("#raised"), Number(n.totalRaised || 0n) / 1e18, { decimals: 3 });
+    renderRarityLive(n.poolsLeft, n.pendingCount);
+    if (totalMinted > feedTop) { feedTop = totalMinted; if (feedReady) refreshFeed(); }
     const finalized = st.dist && st.dist.finalized;
     if (!mintStartV) { setStatus("soon", "Mint opens soon", "铸造即将开启"); cdLabel("Window length", "窗口时长"); }
     else if (outcome === 0 && st.now < mintEnd) { setStatus("live", "Minting live", "铸造进行中"); cdLabel("Closes in", "距离结束"); }
@@ -316,6 +318,71 @@ async function refreshLive() {
   } catch (e) {
     setTT($("#rpc-note"), "Public RPC is busy. Retrying shortly.", "公共 RPC 繁忙，稍后自动重试。");
   }
+}
+
+/* Live rarity count: minted per rarity = initial pool - poolsLeft() (counts revealed trees only). */
+function renderRarityLive(pools, pending) {
+  const box = $("#rarity-live");
+  if (!box || !pools) return;
+  const list = box.querySelector(".rl-list");
+  if (!list.childElementCount) RULES.rarity.forEach((r) => list.append(h("li", { "data-k": r.key },
+    h("span", { tt: [r.name, rz(r.name)] }), h("span", {}, h("b", { class: "ticker", "data-value": "0", text: "0" }), ` / ${r.count.toLocaleString("en-US")}`))));
+  RULES.rarity.forEach((r, i) => {
+    const left = Number(pools[i] ?? r.count);
+    const li = list.querySelector(`[data-k="${r.key}"]`);
+    li && tick(li.querySelector(".ticker"), Math.max(0, r.count - left));
+  });
+  const p = Number(pending || 0n), pe = box.querySelector(".rl-pending");
+  pe.hidden = !(p > 0);
+  if (p > 0) setTT(pe, `revealing: ${p.toLocaleString("en-US")}`, `开图中：${p.toLocaleString("zh-CN")}`);
+}
+
+/* Live mint feed: newest 12 trees, one multicall every ~30 s. */
+const PLACEHOLDER_PNG = "assets/placeholder.png";
+let feedTop = 0, feedReady = false, feedBusy = false;
+const feedKeys = new Map();
+function feedCard(t) {
+  const showArt = t.revealed;
+  const badge = h("span", { class: "lf-badge", hidden: showArt ? "hidden" : null, tt: ["Revealing…", "开图中…"] });
+  const img = h("img", { src: showArt ? artUrl(t.id, t.stage) : PLACEHOLDER_PNG, width: 150, height: 150, loading: "lazy", decoding: "async", alt: `Rootlinks #${t.id}`, "data-zh-alt": `Rootlinks 树 #${t.id}` });
+  img.addEventListener("error", () => { if (!img.src.endsWith(PLACEHOLDER_PNG)) { img.src = PLACEHOLDER_PNG; img.dataset.failed = "1"; badge.hidden = false; } });
+  const mt = MINT_TYPES[t.mintType] || ["—", "—"];
+  return h("a", { class: "lf-card", href: pageHref("mint.html#your-tree", { tree: t.id }), "aria-label": `Tree #${t.id}`, "data-zh-aria-label": `树 #${t.id}` },
+    h("span", { class: "lf-img" }, img, badge),
+    h("span", { class: "lf-meta" }, h("b", { text: `#${t.id}` }), h("span", { tt: t.revealed && t.rarity ? [t.rarity, rz(t.rarity)] : ["Revealing…", "开图中…"] })),
+    h("span", { class: "lf-type", tt: mt }));
+}
+async function refreshFeed() {
+  const box = $("#latest-trees");
+  if (!box || !configured("nft") || feedBusy || !feedTop) return;
+  feedBusy = true;
+  try {
+    const top = feedTop;
+    const { total, trees } = await latestTrees(top, 12);
+    const list = box.querySelector(".lf-list");
+    const nodes = trees.map((t) => {
+      const key = `${t.id}:${t.revealed}:${t.rarity}:${t.stage}:${t.mintType}`;
+      const old = feedKeys.get(t.id);
+      if (old && old.key === key && old.el) {
+        const im = old.el.querySelector("img");
+        if (t.revealed && im && im.dataset.failed) { delete im.dataset.failed; im.src = `${artUrl(t.id, t.stage)}?r=${Date.now()}`; } // art renders within ~10 min; retry
+        return old.el;
+      }
+      const el = feedCard(t);
+      feedKeys.set(t.id, { key, el });
+      return el;
+    });
+    for (const id of [...feedKeys.keys()]) if (!trees.some((t) => t.id === id)) feedKeys.delete(id);
+    list.replaceChildren(...nodes);
+    if (!nodes.length) list.append(h("p", { class: "fine", tt: ["The first trees appear here as soon as they are minted.", "第一批树铸造后会显示在这里。"] }));
+    if (total > top) { feedTop = total; feedBusy = false; return refreshFeed(); }
+  } catch {} finally { feedBusy = false; }
+}
+function wireFeed() {
+  if (!$("#latest-trees") || !configured("nft")) return;
+  feedReady = true; // refreshLive() supplies totalMinted and kicks the first load
+  if (feedTop) refreshFeed();
+  setInterval(() => document.visibilityState === "visible" && refreshFeed(), 30000);
 }
 
 function renderBurn(st) {
@@ -444,9 +511,15 @@ function treeCard(meta) {
     // rarityOf(id) -> (revealed, rarity) from the contract decides the Rarity stat; metadata only supplies the image.
     const revealed = live && !!m && m.revealed === true && !!m.rarity;
     const rarity = revealed ? m.rarity : undefined;
-    const src = live && m.image ? safeImage(m.image) : PLACEHOLDER;
+    // Revealed: prefer the hosted art (art/{id}_{stage}.png), then the tokenURI image, then the placeholder.
+    const metaSrc = live && m.image ? safeImage(m.image) : PLACEHOLDER;
+    const stageN = m && m.stage ? m.stage : Number(attrs.Stage) || 1;
+    let src = revealed ? artUrl(id, stageN) : metaSrc;
     const img = h("img", { src, alt: id ? `Rootlinks #${id}` : "Seed placeholder", width: 260, height: 260, loading: "lazy", referrerpolicy: "no-referrer" });
-    img.addEventListener("error", () => { if (!img.src.endsWith(PLACEHOLDER)) img.src = PLACEHOLDER; }, { once: true });
+    img.addEventListener("error", () => {
+      if (src !== metaSrc && !img.src.endsWith(metaSrc)) { src = metaSrc; img.src = metaSrc; }
+      else if (!img.src.endsWith(PLACEHOLDER)) { src = PLACEHOLDER; img.src = PLACEHOLDER; }
+    });
     const code = id || L("<tree #>", "<树编号>");
     const link = id ? inviteUrl(id) : `${CONFIG.siteUrl}mint.html?ref=<tree #>`;
     const btn = (en, zh, on, extra = {}) => { const b = h("button", { class: "btn btn-small" + (extra.ghost ? " btn-ghost" : ""), type: "button", disabled: id ? null : "disabled", "aria-disabled": id ? null : "true", tt: [en, zh] }); id && b.addEventListener("click", on); return b; };
@@ -464,7 +537,7 @@ function treeCard(meta) {
         h("div", { class: "lk-grid" },
           stat(["Token ID", "树编号"], id ? `#${id}` : "—"),
           stat(["Rarity", "稀有度"], revealed ? [rarity, rz(rarity)] : live ? ["Revealing…", "开图中…"] : ["Reveals ~10 s after mint", "铸造后约 10 秒开图"]),
-          stat(["Stage", "阶段"], live && attrs.Stage !== undefined ? String(attrs.Stage) : "1")),
+          stat(["Stage", "阶段"], live && m && m.stage ? String(m.stage) : live && attrs.Stage !== undefined ? String(attrs.Stage) : "1")),
         h("p", { class: "tc-label", tt: ["Your invite code", "你的邀请码"] }),
         h("div", { class: "row" }, h("code", { class: "mono tc-code", text: code }), btn("Copy code", "复制邀请码", (e) => { copyText(id, e.currentTarget); toast(L("Invite code copied.", "邀请码已复制。")); })),
         h("p", { class: "tc-label", tt: ["Your invite link", "你的邀请链接"] }),
@@ -573,6 +646,7 @@ revealOnScroll(".sec-head .h2, .sec-head .sec-lede, .mint-card, .mint-grid, .loo
 if ($("#spine") && $("#soil")) { const spine = rootSpine($("#spine"), $("#soil")); addEventListener("load", () => spine.rebuild()); }
 applyAttrs();
 refreshLive();
+wireFeed();
 if ($("#countdown")) setInterval(countdownTick, 1000);
 if (configured("nft") && $("#status")) setInterval(() => document.visibilityState === "visible" && refreshLive(), 20000);
 if (reduced) document.documentElement.classList.add("reduced");

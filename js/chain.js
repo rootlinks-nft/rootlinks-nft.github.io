@@ -77,7 +77,7 @@ export async function multi(calls, chunk = 400) {
   return out;
 }
 
-const NFT_STATE_FNS = ["freeMinted", "inviteMinted", "paidMinted", "totalMinted", "totalBurned", "mintStart", "mintEnd", "outcome", "totalRaised"];
+const NFT_STATE_FNS = ["freeMinted", "inviteMinted", "paidMinted", "totalMinted", "totalBurned", "mintStart", "mintEnd", "outcome", "totalRaised", "poolsLeft", "pendingCount"];
 const DIST_STATE_FNS = ["finalized", "launchTime", "scheduledBurned", "burnWeeksDone", "burnWeeksDue", "scheduledBurnDue", "airdropClaimedTotal", "rewardsEmitted", "token"];
 
 /** Mint + launch state. Returns null pieces for unconfigured contracts. */
@@ -173,11 +173,11 @@ export const RARITY_NAMES = ["Common", "Uncommon", "Rare", "Legendary", "World T
 export async function treeMeta(ids) {
   if (!configured("nft") || !ids.length) return [];
   const calls = [];
-  ids.forEach((t) => calls.push({ iface: I.nft, to: CONFIG.nft, fn: "tokenURI", args: [t] }, { iface: I.nft, to: CONFIG.nft, fn: "rarityOf", args: [t] }));
+  ids.forEach((t) => calls.push({ iface: I.nft, to: CONFIG.nft, fn: "tokenURI", args: [t] }, { iface: I.nft, to: CONFIG.nft, fn: "rarityOf", args: [t] }, { iface: I.nft, to: CONFIG.nft, fn: "stageOf", args: [t] }));
   const r = await multi(calls);
   return ids.map((id, k) => {
-    const u = r[2 * k], ro = r[2 * k + 1];
-    const out = { id, name: `Rootlinks #${id}`, image: "", attributes: [], revealed: false, rarity: null };
+    const u = r[3 * k], ro = r[3 * k + 1], sg = r[3 * k + 2];
+    const out = { id, name: `Rootlinks #${id}`, image: "", attributes: [], revealed: false, rarity: null, stage: sg === null || sg === undefined ? null : Number(sg) };
     try {
       const b64 = u.split(",")[1];
       const json = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b64), (c) => c.charCodeAt(0))));
@@ -189,6 +189,32 @@ export async function treeMeta(ids) {
     }
     return out;
   });
+}
+
+/** Hosted art for a revealed tree (rendered by the repo's GitHub Action within ~10 min of reveal). */
+export const artUrl = (id, stage) => `art/${id}_${stage || 1}.png`;
+export const MINT_TYPES = { 1: ["Paid", "付费"], 2: ["Invite", "邀请"], 3: ["Free", "免费"] };
+
+/**
+ * Newest trees for the live feed, in one Multicall3 batch: totalMinted, plus tokenData(id) and stageOf(id)
+ * for ids top..top-(n-1). `top` is the last known totalMinted; the fresh total comes back so the caller can
+ * catch up on the next tick.
+ */
+export async function latestTrees(top, n = 12) {
+  if (!configured("nft")) return { total: 0, trees: [] };
+  const ids = [];
+  for (let t = top; t >= 1 && ids.length < n; t--) ids.push(t);
+  const calls = [{ iface: I.nft, to: CONFIG.nft, fn: "totalMinted" }];
+  ids.forEach((t) => calls.push({ iface: I.nft, to: CONFIG.nft, fn: "tokenData", args: [t] }, { iface: I.nft, to: CONFIG.nft, fn: "stageOf", args: [t] }));
+  const r = await multi(calls);
+  const total = Number(r[0] ?? top);
+  const trees = ids.map((id, k) => {
+    const d = r[1 + 2 * k], sg = r[2 + 2 * k];
+    if (!d) return null;
+    const revealed = !!d.revealed;
+    return { id, mintType: Number(d.mintType), revealed, rarity: revealed ? RARITY_NAMES[Number(d.rarity)] || null : null, stage: sg === null || sg === undefined ? 1 : Number(sg) };
+  }).filter(Boolean);
+  return { total, trees };
 }
 
 /** Invite check for a tree id: exists, invites used. */
