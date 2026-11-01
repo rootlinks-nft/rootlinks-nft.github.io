@@ -26,7 +26,7 @@ export const CONFIG = {
   siteUrl: "https://rootlinks-nft.github.io/",
   x: "https://x.com/rootlinks_nft",
   xHandle: "@rootlinks_nft",
-  element: "https://element.market/",
+  element: "https://element.market/collections/rootlinks",
   // Optional: public source repo link, shown in the Contracts section when set
   sourceRepo: "",
 };
