@@ -106,6 +106,7 @@ function renderContracts() {
   ];
   for (const [name, addr, ours] of rows) {
     const ok = isAddr(addr);
+    if (!ok && ours) continue; // Distributor/token rows appear once published (after sell-out)
     box.append(h("div", { class: "ct" },
       h("h3", { tt: name }),
       ok ? h("div", { class: "addr", text: addr }) : h("div", { class: "addr pending", tt: ["Published here on launch day", "开铸当天在这里公布"] }),
@@ -149,7 +150,8 @@ function renderPromptBody(text) {
 
 function renderPrompts() {
   const tabs = $("#prompt-tabs");
-  const only = (tabs.dataset.prompts || "").split(",").map((x) => x.trim()).filter(Boolean);
+  const only = (tabs.dataset.prompts || "").split(",").map((x) => x.trim()).filter(Boolean)
+    .filter((x) => configured("distributor") || !["airdrop", "rewards", "burn"].includes(x)); // token-side prompts appear after sell-out
   const ps = buildPrompts(inputs(), CONFIG, LANG).filter((p) => !only.length || only.includes(p.id));
   if (!tabs.childElementCount) {
     ps.forEach((p) => {

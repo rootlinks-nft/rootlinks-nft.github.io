@@ -6,9 +6,9 @@ export const CONFIG = {
   chainName: "BNB Smart Chain",
 
   // Rootlinks contracts (fill in on launch day, after BscScan/Sourcify verification)
-  nft: "",          // RootlinksNFT
-  distributor: "",  // RootlinksDistributor
-  token: "",        // RootlinksToken (deployed by the Distributor; equals distributor.token())
+  nft: "0x25F6DF83D43496583BC7190f02E68A15C3E3bB25", // RootlinksNFT
+  distributor: "",  // RootlinksDistributor: published after the mint sells out
+  token: "",        // RootlinksToken: published after the mint sells out (deployed by the Distributor; equals distributor.token())
 
   // External, already-deployed contracts
   agentIdRegistry: "0x60B9262456dE011F7d15a54CdD8c48bAaa8B022F", // SPACE ID Agent ID (soulbound BEP-721)
