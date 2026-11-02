@@ -227,6 +227,30 @@ def mint_glyph(d, p, mint_type, gy):
     else:                          # Free: leaf with midrib
         leaf_shape(d, cx - 8 * S, cy + 7 * S, -math.pi / 4, 22 * S, 10 * S, mk, vein=stone)
 
+def surface_root(d, gd, p, token_id, x0, gy, k=0.62):
+    """Faint glowing surface root along the ground, trunk base to both frame edges
+    (the homepage rarity-card look). Always present; invite roots stay much brighter."""
+    r = random.Random(token_id * 6151 + 3)
+    col = tuple(int(c * k) for c in p["glow"])
+    core = _mix(p["ground"], _mix(p["glow"], (255, 255, 255), 0.25), 0.7)
+    for side in (-1, 1):
+        ph = r.uniform(0, 6.28); amp = r.uniform(3, 6) * S
+        y0 = gy + 10 * S; y1 = gy + r.uniform(20, 36) * S
+        sx0 = x0 + side * 4 * S
+        span = abs((CW if side > 0 else 0) - sx0) + 20 * S
+        pts = []
+        for i in range(31):
+            t = i / 30
+            pts.append((sx0 + side * t * span, y0 + (y1 - y0) * t + math.sin(t * 9 + ph) * amp * t))
+        for j in range(2):          # a couple of tiny rootlets
+            i = r.randint(8, 24); bx, by = pts[i]
+            a = math.pi / 2 + side * r.uniform(0.4, 1.0); ln = r.uniform(10, 20) * S
+            tl = [(bx, by), (bx + math.cos(a) * ln, by + math.sin(a) * ln)]
+            d.line(tl, fill=_mix(p["ground"], core, 0.6), width=max(1, int(1.5 * S)))
+            gd.line([(a_ / S, b_ / S) for a_, b_ in tl], fill=tuple(int(c * 0.6) for c in col), width=1)
+        d.line(pts, fill=core, width=max(1, int(2 * S)), joint="curve")
+        gd.line([(a_ / S, b_ / S) for a_, b_ in pts], fill=col, width=4, joint="curve")
+
 def invite_roots(d, gd, p, token_id, x0, gy, links, thick=1.0):
     """Glowing roots that run out of frame - one per successful invite.
     Crisp core drawn on the main canvas (d, CW scale); glow on gd (W scale)."""
@@ -471,6 +495,7 @@ def render(token_id, rarity, stage, mint_type, invites=None):
 
     draw_segs(d, rsegs, p["root"])
     bark_highlight(d, rsegs, _lift(p["root"], 18))
+    surface_root(d, gd, p, token_id, x0, gy)
     invite_roots(d, gd, p, token_id, x0, gy, links)
     fw = trunk_w * 0.9
     d.polygon([(x0 - fw, gy + 4 * S), (x0 - trunk_w * 0.45, gy - trunk_w * 0.6), (x0 + trunk_w * 0.45, gy - trunk_w * 0.6), (x0 + fw, gy + 4 * S)], fill=p["bark"])
@@ -564,6 +589,7 @@ def render_world_tree(token_id, stage, mint_type, links):
 
     draw_segs(d, rsegs, p["root"])
     bark_highlight(d, rsegs, _lift(p["root"], 22))
+    surface_root(d, gd, p, token_id, x0, gy)
     invite_roots(d, gd, p, token_id, x0, gy, links, thick=1.4)
     draw_segs(d, segs, p["bark"])
     d.polygon(body, fill=p["bark"])

@@ -192,7 +192,7 @@ export async function treeMeta(ids) {
 }
 
 /** Hosted art for a revealed tree (rendered by the repo's GitHub Action within ~10 min of reveal). */
-export const artUrl = (id, stage) => `art/${id}_${stage || 1}.png?v=3`;
+export const artUrl = (id, stage) => `art/${id}_${stage || 1}.png?v=4`;
 export const MINT_TYPES = { 1: ["Paid", "付费"], 2: ["Invite", "邀请"], 3: ["Free", "免费"] };
 
 /**
