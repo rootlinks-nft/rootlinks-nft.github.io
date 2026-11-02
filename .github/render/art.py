@@ -9,9 +9,9 @@ pixels, and a token keeps the same tree shape as it grows from stage 1 to 5.
 Style continues gen.py: flat code-drawn shapes, starry dusk sky, cut-away soil
 with visible roots, invite roots glowing out to the frame edge.
 """
-import math, random
+import math, random, os
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageChops
+from PIL import Image, ImageDraw, ImageFilter, ImageChops, ImageFont
 
 W = 1024          # output size
 S = 1             # supersample factor for the crisp layer (final 512px downscale gives AA)
@@ -671,8 +671,43 @@ def placeholder():
     return finish(img, 1)
 
 
+
+# ---------------------------------------------------------------- label
+_FONT = {}
+def _font(px):
+    if px not in _FONT:
+        here = os.path.dirname(os.path.abspath(__file__))
+        for f in (os.path.join(here, "DejaVuSans-Bold.ttf"), "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"):
+            if os.path.exists(f):
+                _FONT[px] = ImageFont.truetype(f, px); break
+        else:
+            _FONT[px] = ImageFont.load_default()
+    return _FONT[px]
+
+LABEL_COL = {"Common": (140,210,96), "Uncommon": (255,170,70), "Rare": (205,175,252),
+             "Legendary": (120,240,225), "Mythic": (240,210,120)}
+
+def label(img, rarity, stage):
+    """Small rarity + stage tag, bottom-left, readable at marketplace thumbnail size."""
+    rarity = rarity.capitalize()
+    name = "WORLD TREE" if rarity == "Mythic" else rarity.upper()
+    text = f"{name}  \u00b7  STAGE {stage}"
+    s = img.size[0] / 512
+    f = _font(int(19 * s))
+    col = LABEL_COL.get(rarity, (230,230,230))
+    ov = Image.new("RGBA", img.size, (0, 0, 0, 0)); d = ImageDraw.Draw(ov)
+    x0, y0 = 16 * s, img.size[1] - 50 * s
+    bb = d.textbbox((0, 0), text, font=f)
+    w, h = bb[2] - bb[0], bb[3] - bb[1]
+    px, py = 13 * s, 8 * s
+    d.rounded_rectangle([x0, y0, x0 + w + 2 * px, y0 + h + 2 * py], radius=(h + 2 * py) / 2,
+                        fill=(8, 8, 14, 185), outline=col + (230,), width=max(1, int(2 * s)))
+    d.text((x0 + px - bb[0], y0 + py - bb[1]), text, font=f, fill=col + (255,))
+    return Image.alpha_composite(img.convert("RGBA"), ov).convert("RGB")
+
 # ---------------------------------------------------------------- publish
 def render_png(token_id, rarity, stage, mint_type, invites=None, colors=96):
     """512px, palette-quantized image for publishing."""
     img = render(token_id, rarity, stage, mint_type, invites).resize((OUT, OUT), Image.LANCZOS)
+    img = label(img, rarity, stage)
     return img.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE)
