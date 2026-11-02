@@ -41,7 +41,7 @@ Before a transfer, read the destination address back to the user in groups of 4 
 1 free per Agent ID (FREE or INVITE), 5 paid + 1 per Agent ID invited (max 10). An Agent ID binds to an inviter once. A tree invites at most 2 times. Supply: 1000 FREE · 1750 INVITE · 2805 PAID (5555 total, no team trees); a paid sellout raises up to 8.415 BNB (80% = 6.732 BNB to liquidity, 20% = 1.683 BNB to the creator).
 
 ## Reveal
-Each tree reveals on its own a few blocks after its mint. rarityOf(tokenId) -> (bool revealed, uint8 rarity): 0 Common, 1 Uncommon, 2 Rare, 3 Legendary, 4 World Tree. If revealed is false, tell the user "Revealing…" (no rarity yet). The next mint reveals pending trees; anyone may also call revealPending(maxCount) (value 0, preview and confirm like any other call).
+Each tree reveals on its own a few blocks after its mint. rarityOf(tokenId) -> (bool revealed, uint8 rarity): 0 Common, 1 Uncommon, 2 Rare, 3 Legendary, 4 World Tree. If revealed is false, tell the user "Revealing…" (no rarity yet). The next mint reveals pending trees; anyone may also call revealPending(maxCount) (value 0, preview and confirm like any other call). To see the rarity right away, wait about 5 blocks (~5 s) after the mint confirms, then call revealPending(10). If it returns 0, wait ~5 s and call it once more.
 
 ## 中文说明（简体中文）
 Rootlinks 是 BNB Smart Chain（chainId 56）上的 5,555 棵树 NFT 系列，只有持有 SPACE ID .ai Agent ID 的 Binance Agentic Wallet 才能铸造。社区项目，与 Binance、SPACE ID 及 Element 无关联，也未获其背书。不构成投资建议，不承诺任何收益。
@@ -49,7 +49,7 @@ Rootlinks 是 BNB Smart Chain（chainId 56）上的 5,555 棵树 NFT 系列，�
 - 规则：每个 Agent ID 1 个免费（mintFree，或通过邀请人 mintInvite）+ 5 个付费，每个 0.003 BNB（3000000000000000 wei）；每邀请一个其他 Agent ID +1 付费额度，最多 +5。首次绑定邀请人时可用 mintPaidWithInvite 以 0.0015 BNB（1500000000000000 wei）付费铸造 1 个。额度跟随 Agent ID，不跟随钱包。
 - 数量：免费 1,000（只需 gas）· 邀请 1,750（只需 gas）· 付费 2,805，共 5,555 棵，没有团队树。付费售罄最多募集 8.415 BNB：80%（6.732 BNB）进入流动性，20%（1.683 BNB）归创作者。
 - 窗口 72 小时；付费部分售罄即结束。未售罄（outcome() == 2）时，付费树持有者可调用 refund(tokenId) 退回 80%，该树被销毁。
-- 开图（逐棵）：rarityOf(tokenId) 返回 (bool revealed, uint8 rarity)，rarity 为 0 普通、1 罕见、2 稀有、3 传说、4 世界之树。revealed 为 false 时该树仍在开图中，应显示"开图中…"，不要显示稀有度。每次开图会触发 Revealed(tokenId, rarity) 事件。pendingCount() 为等待开图的树数量；poolsLeft() 返回剩余稀有度池 [普通, 罕见, 稀有, 传说, 世界之树]。任何人都可以调用 revealPending(maxCount)。
+- 开图（逐棵）：rarityOf(tokenId) 返回 (bool revealed, uint8 rarity)，rarity 为 0 普通、1 罕见、2 稀有、3 传说、4 世界之树。revealed 为 false 时该树仍在开图中，应显示"开图中…"，不要显示稀有度。每次开图会触发 Revealed(tokenId, rarity) 事件。pendingCount() 为等待开图的树数量；poolsLeft() 返回剩余稀有度池 [普通, 罕见, 稀有, 传说, 世界之树]。任何人都可以调用 revealPending(maxCount)。想立即看到稀有度：铸造确认后等待约 5 个区块（约 5 秒），再调用 revealPending(10)；若返回 0，约 5 秒后再调用一次。
 - 步骤：1）`baw wallet agent-id` 取得 handle，agentId = uint256(keccak256(bytes(handle)))（小写，去掉 ".ai"），确认注册表 ownerOf(agentId) 等于 Agent 钱包；2）先读取状态（mintOpen()、agentData(agentId)、paidRemainingOf(agentId)）；3）用 ABI 编码调用并预览：
   `baw contract-call preview --binanceChainId 56 --from <agent wallet> --to <official address> --value <wei> --inputData <calldata> --json`
   4）向用户展示合约、函数、参数、BNB 数额、gas 和模拟结果，等用户明确回复 "confirm"（确认）；5）`baw contract-call execute --requestId <requestId> --json`，报告交易哈希（https://bscscan.com/tx/<hash>）。

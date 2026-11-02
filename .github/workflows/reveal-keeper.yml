@@ -1,0 +1,21 @@
+name: reveal-keeper
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+concurrency:
+  group: reveal-keeper
+  cancel-in-progress: false
+jobs:
+  reveal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save --no-package-lock ethers@6
+      - run: node .github/keeper/reveal.mjs
+        env:
+          KEEPER_KEY: ${{ secrets.KEEPER_KEY }}
